@@ -1,5 +1,5 @@
 ''' provides an API for UI to access and display final result '''
-from flask import Flask, request, url_for, jsonify
+from flask import Flask, request, url_for, jsonify, render_template
 from flask_restful import Api, Resource, reqparse
 import os, requests, json, xmltodict, geocoder
 import pytz
@@ -35,10 +35,19 @@ def latlng(place): #convert text location to latitude and longitude
 def sendDataToUI():
     return jsonify({'data': 'asdsa'})
 
-source_key ='source'
+source_key ='origin'
 destination_key = 'destination'
 flightno_key = 'flightno'
 time_key = 'time'
+airline_key = 'airline'
+deptdate_key = 'departuredate'
+arvdate_key = 'arrivaldate'
+depttime_key = 'departuretime'
+arvtime_key = 'arrivaltime'
+
+@app.route('/', methods=['GET'])
+def index():
+	return render_template('index.html')
 
 @app.route('/find', methods=['GET', 'POST'])  # to accquire source and destination info
 def getDetails():
@@ -47,12 +56,18 @@ def getDetails():
         destination = request.form[destination_key]
         flightno = request.form[flightno_key]
         time = request.form[time_key]
+        airline = request.form[airline_key]
+        departdate = request.form[deptdate_key]
+        arrivaldate = request.form[arvdate_key]
+        departtime = request.form[depttime_key]
+        arrivetime = request.form[arvtime_key]
     else:
         print request.args
         source = request.args.get(source_key)
         destination = request.args.get(destination_key)
         flightno = request.args.get(flightno_key)
         time = request.args.get(time_key)
+        airline = request.args.get(airline_key)
 
     coordinate = latlng(source)
     begin = parse_date_time_utc(time)
@@ -65,6 +80,7 @@ def getDetails():
     result = get_forecast_weather(coordinate[0], coordinate[1], begin, end)
     print result
     # l = [{'source': source, 'destination': destination, 'flightno': flightno, 'time': time}]
+    
     return jsonify(result)
 
 
