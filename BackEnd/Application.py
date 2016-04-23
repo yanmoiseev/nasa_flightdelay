@@ -1,8 +1,6 @@
-''' provides an API for UI to access and display final result '''
-from flask import Flask, request, url_for, jsonify, render_template
-from flask_restful import Api, Resource, reqparse
-import os, requests, json, xmltodict, geocoder,geopy
-import pytz
+from flask import Flask, request, url_for, jsonify, render_template, redirect
+from flask_restful import Api
+import requests, xmltodict, geocoder, pytz, geopy
 from dateutil import parser
 import datetime
 from collections import OrderedDict
@@ -10,35 +8,31 @@ from collections import OrderedDict
 app = Flask(__name__)
 api = Api(app)
 
-################################
-#### to send output to ui ######
-
-# prob = os.path.join("toui.txt")  # info to ui
-# outstr = ''
-#
-# def readData():
-#     with open(prob, 'r') as fd:
-#         outstr = fd.read()
-#     return outstr
-#
-# l = [{'result': readData()}]
-
-def latlng(place): #convert text location to latitude and longitude
-    location = geocoder.google(place) # location
+#region utility
+def latlng(place):  # convert text location to latitude and longitude
+    location = geocoder.google(place)  # location
     latitude = location.lat
     longitude = location.lng
-    return (latitude,longitude)
+    return (latitude, longitude)
+
+
+def parse_date_time_utc(date_str):
+    dt = parser.parse(date_str)
+
+    if dt.tzinfo:
+        # convert to utc
+        dt = dt.replace(tzinfo=pytz.utc) + dt.tzinfo._offset
+
+    return dt
 
 def get_timezone(place):
-    g = geopy.geocoders.GoogleV3()
-    return g.timezone(geocoder.google(place).latlng)
+   g = geopy.geocoders.GoogleV3()
+   return g.timezone(geocoder.google(place).latlng)
+#endregion
 
-print get_timezone('sydney')
-
-source_key ='origin'
+source_key = 'origin'
 destination_key = 'destination'
 flightno_key = 'flightno'
-time_key = 'time'
 airline_key = 'airline'
 deptdate_key = 'departuredate'
 arvdate_key = 'arrivaldate'
@@ -49,65 +43,55 @@ arvtime_key = 'arrivaltime'
 def index():
 	return render_template('index.html')
 
+
 @app.route('/find', methods=['GET', 'POST'])  # to accquire source and destination info
-def getDetails():
+def find():
     if request.method == 'POST':
-        source = request.form[source_key]
-        destination = request.form[destination_key]
-        flightno = request.form[flightno_key]
-        time = request.form[time_key]
-        airline = request.form[airline_key]
-        departdate = request.form[deptdate_key]
-        arrivaldate = request.form[arvdate_key]
-        departtime = request.form[depttime_key]
-        arrivetime = request.form[arvtime_key]
+        source = request.form.get(source_key,None)
+        destination = request.form.get(destination_key,None)
+        flightno = request.form.get(flightno_key,None)
+        airline = request.form.get(airline_key,None)
+        departdate = request.form.get(deptdate_key,None)
+        arrivaldate = request.form.get(arvdate_key,None)
+        departtime = request.form.get(depttime_key,None)
+        arrivetime = request.form.get(arvtime_key,None)
     else:
-        print request.args
-        source = request.args.get(source_key)
-        destination = request.args.get(destination_key)
-        flightno = request.args.get(flightno_key)
-        time = request.args.get(time_key)
-        airline = request.args.get(airline_key)
+        return redirect(url_for('index'))
 
-    coordinate = latlng(source)
-    begin = parse_date_time_utc(time)
-    end = begin + datetime.timedelta(seconds=1)
+    source_coordinate = latlng(source)
+    dest_coordinate = latlng(destination)
+    departure_full_time = '{} {}'.format(departdate, departtime)
+    arrive_full_time = '{} {}'.format(arrivaldate, arrivetime)
 
-    begin = begin.isoformat().split('+')[0]
-    end = end.isoformat().split('+')[0]
+    departure_begin = parse_date_time_utc(departure_full_time)
+    departure_end = departure_begin + datetime.timedelta(seconds=1)
+    departure_begin = departure_begin.isoformat().split('+')[0]
+    departure_end = departure_end.isoformat().split('+')[0]
 
-    print '!!!!!!!!!SOURCE: {} COORD: {} BEGIN: {} END: {}'.format(source, coordinate, begin, end)
-    result = get_forecast_weather(coordinate[0], coordinate[1], begin, end)
-    print result
-    # l = [{'source': source, 'destination': destination, 'flightno': flightno, 'time': time}]
-    
-    return jsonify(result)
+    arrival_begin = parse_date_time_utc(arrive_full_time)
+    arrival_end = arrival_begin + datetime.timedelta(seconds=1)
+    arrival_begin = arrival_begin.isoformat().split('+')[0]
+    arrival_end = arrival_end.isoformat().split('+')[0]
+
+    departure_result = get_forecast_weather(source_coordinate[0], source_coordinate[1], departure_begin, departure_end)
+    return jsonify(departure_result)
+    # arrival_result = get_forecast_weather(dest_coordinate[0], dest_coordinate[1], arrival_begin, arrival_end)
+    # return jsonify([departure_result, arrival_result])
 
 
 ####################################
 ##### make other data available ####
-
-# create list of dictionaries
-ml = [{}]
-##### handlers for get and put from MI ####
+##### handlers for get and put from other endpoints####
 @app.route('/ml', methods=['GET', 'POST'])
 def sendDataToML():
+    ml = [{}]
     return jsonify({'data': ml})
 
-### to comvert time to specific timezone ###
-def parse_date_time_utc(date_str):
-    dt = parser.parse(date_str)
-    utc = dt.replace(tzinfo=pytz.utc) + dt.tzinfo._offset
 
-    return utc
-
-####################################
-### to fetch data from external sources ###
 
 # this one is forming url to get weather data from http://graphical.weather.gov/xml/SOAP_server/ndfdXMLclient.php?
 def get_forecast_weather(lat=None, lon=None,
                          begin=None, end=None):
-
     base_url = 'http://graphical.weather.gov/xml/SOAP_server/ndfdXMLclient.php'
     params = {}
     params['whichClient'] = 'NDFDgen'
@@ -139,9 +123,10 @@ def get_forecast_weather(lat=None, lon=None,
     return parse_xml_to_flat_dict(requests.get(base_url, params=params))
 
 
-def parse_xml_to_flat_dict(re):
-    response_dict = xmltodict.parse(re.content)
-    print re.content
+def parse_xml_to_flat_dict(request):
+    print request.url
+    response_dict = xmltodict.parse(request.content)
+    print request.content
     response_data = response_dict['dwml']['data']
     response_params = response_data['parameters']
     parsed_result = {}
@@ -178,5 +163,6 @@ def parse_xml_to_flat_dict(re):
 
     return parsed_result
 
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
