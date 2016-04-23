@@ -2,6 +2,9 @@
 from flask import Flask, request, url_for, jsonify
 from flask_restful import Api, Resource, reqparse
 import os, requests, json, xmltodict, geocoder
+import pytz
+from dateutil import parser
+import datetime
 from collections import OrderedDict
 
 app = Flask(__name__)
@@ -21,7 +24,7 @@ api = Api(app)
 # l = [{'result': readData()}]
 
 def latlng(place): #convert text location to latitude and longitude
-    location = geocoder.google("source") # location
+    location = geocoder.google(place) # location
     latitude = location.lat
     longitude = location.lng
     return (latitude,longitude)
@@ -50,8 +53,19 @@ def getDetails():
         destination = request.args.get(destination_key)
         flightno = request.args.get(flightno_key)
         time = request.args.get(time_key)
-    l = [{'source': source, 'destination': destination, 'flightno': flightno, 'time': time}]
-    return jsonify({"response": l})
+
+    coordinate = latlng(source)
+    begin = parse_date_time_utc(time)
+    end = begin + datetime.timedelta(seconds=1)
+
+    begin = begin.isoformat().split('+')[0]
+    end = end.isoformat().split('+')[0]
+
+    print '!!!!!!!!!SOURCE: {} COORD: {} BEGIN: {} END: {}'.format(source, coordinate, begin, end)
+    result = get_forecast_weather(coordinate[0], coordinate[1], begin, end)
+    print result
+    # l = [{'source': source, 'destination': destination, 'flightno': flightno, 'time': time}]
+    return jsonify(result)
 
 
 ####################################
@@ -66,6 +80,12 @@ ml = [{}]
 def sendDataToML():
     return jsonify({'data': ml})
 
+
+def parse_date_time_utc(date_str):
+    dt = parser.parse(date_str)
+    utc = dt.replace(tzinfo=pytz.utc) + dt.tzinfo._offset
+
+    return utc
 
 ####################################
 ### to fetch data from external sources ###
@@ -102,11 +122,12 @@ def get_forecast_weather(lat=None, lon=None,
     params['Submit'] = 'Submit'
 
     # call the url, and gives request to function to process xml result
-    return requests.get(base_url, params=params)
+    return parse_xml_to_flat_dict(requests.get(base_url, params=params))
 
 
-def xgetData(re):
+def parse_xml_to_flat_dict(re):
     response_dict = xmltodict.parse(re.content)
+    print re.content
     response_data = response_dict['dwml']['data']
     response_params = response_data['parameters']
     parsed_result = {}
@@ -115,31 +136,31 @@ def xgetData(re):
     long = response_data['location']['point']['@longitude']
     parsed_result['location'] = (lat, long)
 
-    def add_key_value(ordered_dict, target_dict):
-        if 'name' in ordered_dict and 'value' in ordered_dict:
-            target_dict[ordered_dict['name']] = ordered_dict['value']
+    temperature = response_params['temperature'][0]['value']
+    dew_point = response_params['temperature'][1]['value']
+    wind_speed = response_params['wind-speed'][0]['value']
+    wind_direction = response_params['direction']['value']
+    cloud_cover_amount = response_params['cloud-amount']['value']
+    snow_amount = response_params['precipitation']['value']
 
-    def loop_dict_list(list, target_dict):
-        for l in list:
-            if isinstance(l, OrderedDict):
-                add_key_value(l, target_dict)
-            else:
-                loop_dict_list(l, target_dict)
+    probability_severe_thunderstorm = response_params['convective-hazard'][0]['severe-component']['value']
+    probability_extreme_severe_thunderstorm = response_params['convective-hazard'][1]['severe-component']['value']
 
-    loop_dict_list(response_params, parsed_result)
-
-    temp = response_params['temperature']
-    dew_point = response_params['']
+    wind_gust = response_params['wind-speed'][1]['value']
+    humidity = response_params['humidity']['value']
 
     parsed_result['location'] = (lat, long)
-    parsed_result['time-layout'] = response_data['time-layout']['start-valid-time']
-    parsed_result['temp'] = response_params
-    parsed_result['temp'] = response_params['temperature'][0]['value']
-    parsed_result['dew_temp'] = response_params['temperature'][1]['value']
-    parsed_result['wind-speed'] = response_params['wind-speed']['value']
-    parsed_result['cloud-amount'] = response_params['cloud-amount']['value']
-    parsed_result['humidity'] = response_params['humidity']['value']
+    parsed_result['temperature'] = temperature
+    parsed_result['dew_point'] = dew_point
 
+    parsed_result['wind_speed'] = wind_speed
+    parsed_result['wind_direction'] = wind_direction
+    parsed_result['cloud_cover_amount'] = cloud_cover_amount
+    parsed_result['snow_amount'] = snow_amount
+    parsed_result['probability_severe_thunderstorm'] = probability_severe_thunderstorm
+    parsed_result['probability_extreme_severe_thunderstorm'] = probability_extreme_severe_thunderstorm
+    parsed_result['wind_gust'] = wind_gust
+    parsed_result['humidity'] = humidity
 
     return parsed_result
 
