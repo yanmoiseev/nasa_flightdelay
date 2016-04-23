@@ -14,8 +14,11 @@
 
 <body>
 <div id="container" style="height: 100vh"></div>
-<input type="text" id="lat" />
-<input type="text" id="lon" />
+<input type="number" id="olat"  value="40"/>
+<input type="number" id="olon" value="-70"/>
+<input type="number" id="dlat"  value="30"/>
+<input type="number" id="dlon" value="-122"/>
+
 <button type="button" onclick="buttonHandler()">butt</button>
 <script>
     var map = new Datamap({
@@ -23,24 +26,40 @@
         scope: 'usa'
     });
 
-    function buttHandler() {
-        var element = document.getElementById('container');
-        console.log(element);
-    }
+    function renderMap(olat, olon, dlat, dlon) {
+        // removes children elements of target div 'container', then redraws the map with new points (limit 2 atm)
+        // lat - lon limits not implemented, will give error when outside USA lat-lon boundaries
+        var myNode = document.getElementById('container');
+        while (myNode.firstChild) {
+            myNode.removeChild(myNode.firstChild);
+        }
 
-    function buttonHandler() {
+        var map = new Datamap({
+            element: document.getElementById('container'),
+            scope: 'usa'
+        });
+
         map.arc([
             {
                 origin: {
-                    latitude: 40.639722,
-                    longitude: -73.778889
+                    latitude: olat,
+                    longitude: olon
                 },
                 destination: {
-                    latitude: 37.618889,
-                    longitude: -122.375
+                    latitude: dlat,
+                    longitude: dlon
                 }
             }
         ],  {strokeWidth: 1, arcSharpness: 1.4});
+    }
+
+    function buttonHandler() {
+        // to draw lines, pass values into it. In this example the button gets values from fields.
+        var olat = document.getElementById('olat').value;
+        var olon = document.getElementById('olon').value;
+        var dlat = document.getElementById('dlat').value;
+        var dlon = document.getElementById('dlon').value;
+        renderMap(olat, olon, dlat, dlon);
     }
 
 </script>
