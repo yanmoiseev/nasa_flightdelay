@@ -1,7 +1,7 @@
 ''' provides an API for UI to access and display final result '''
 from flask import Flask,request,url_for,jsonify, flash
 from flask_restful import Api,Resource,reqparse
-import os,requests,json,xmltodict
+import os,requests,json,xmltodict,geocoder
 from collections import OrderedDict
 
 app = Flask(__name__)
@@ -17,7 +17,15 @@ def readData():
     with open (prob,'r') as fd:
         outstr = fd.read()
     return outstr
+    
 l = [{'result':readData()}]
+
+def latlng(place): #convert text location to latitude and longitude
+    location = geocoder.google("source") # location
+    latitude = location.lat
+    longitude = location.lng
+    return (latitude,longitude) 
+    
 
 #### get and post handler to send data to UI ####
 
@@ -44,8 +52,7 @@ def getDetails():
         source = request.args.get(source_key)
         destination = request.args.get(destination_key)
         flightno = request.args.get(flightno_key)
-        time = request.args.get(time_key)
-    
+        time = request.args.get(time_key)    
     l=[{'source':source,'destination':destination,'flightno':flightno,'time':time}]
     return jsonify({"response":l})
 
@@ -88,16 +95,10 @@ def xgetData():
 	xdatad['wind-speed'] = xdata['dwml']['data']['parameters']['wind-speed']['value']	
 	xdatad['cloud-amount'] = xdata['dwml']['data']['parameters']['cloud-amount']['value']
 	xdatad['humidity'] = xdata['dwml']['data']['parameters']['humidity']['value']
-	
-	
-
-	#for para in parameterst:
-	#	xdatad[para['name']] = parameterst[para]['value']
-	#	print xdatad
 
 	return xdatad
-
-print xgetData()
+	
+print latlng("CPH airport")
 
 if __name__ == '__main__':
     app.run(debug=True)
