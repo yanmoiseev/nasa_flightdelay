@@ -1,88 +1,123 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Flight Delay Tracker</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" />
+    <link rel="stylesheet" type="text/css" href="bootstrap-datetimepicker.min.css" />
     <style>
         .unPadding {
             padding: 0;
             margin:0;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script src="moment.js"></script>
+    <script src="bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker1').datetimepicker({
+                format: 'dddd, MMMM Do YYYY'
+            });
+            $('#datetimepicker2').datetimepicker({
+                format: 'dddd, MMMM Do YYYY'
+                //useCurrent: false
+            });
+            $("#datetimepicker1").on("dp.change", function (e) {
+                $('#datetimepicker2').data("DateTimePicker").minDate(e.date);
+            });
+            $("#datetimepicker2").on("dp.change", function (e) {
+                $('#datetimepicker1').data("DateTimePicker").maxDate(e.date);
+            });
+
+        });
+    </script>
+
 </head>
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <form>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="airline">Airline</label>
-                                <input type="text" class="form-control" id="airline" placeholder="">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="flightNo">Flight No.</label>
-                                <input type="text" class="form-control" id="flightNo" placeholder="">
-                            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <form id="form">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="airline">Airline</label>
+                            <input type="text" class="form-control" id="airline" placeholder="">
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="origin">Origin</label>
-                                <input type="text" class="form-control" id="origin" placeholder="">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="destination">Destination</label>
-                                <input type="text" class="form-control" id="destination" placeholder="">
-                            </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="flightNo">Flight No.</label>
+                            <input type="text" class="form-control" id="flightNo" placeholder="">
                         </div>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="origin">Origin</label>
+                            <input type="text" class="form-control" id="origin" placeholder="">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="destination">Destination</label>
+                            <input type="text" class="form-control" id="destination" placeholder="">
+                        </div>
+                    </div>
+                </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="departureDate">Departure Date</label>
-                                <input type="text" class="form-control" id="departureDate" placeholder="">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="datetimepicker1">Departure Date</label>
+                            <div class='input-group date' id='datetimepicker1'>
+                                <input type='text' class="form-control" />
+                    				<span class="input-group-addon">
+                        				<span class="glyphicon glyphicon-calendar"></span>
+                    				</span>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="arrivalDate">Arrival Date</label>
-                                <input type="text" class="form-control" id="arrivalDate" placeholder="">
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="datetimepicker2">Arrival Date</label>
+                            <div class='input-group date' id='datetimepicker2'>
+                                <input type='text' class="form-control" />
+                    				<span class="input-group-addon">
+                        				<span class="glyphicon glyphicon-calendar"></span>
+                    				</span>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="departureTime">Departure Time</label>
-                                <input type="text" class="form-control" id="departureTime" placeholder="">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="arrivalTime">Arrival Time</label>
-                                <input type="text" class="form-control" id="arrivalTime" placeholder="">
-                            </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="departureTime">Departure Time</label>
+                            <input type="text" class="form-control" id="departureTime" placeholder="">
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="arrivalTime">Arrival Time</label>
+                            <input type="text" class="form-control" id="arrivalTime" placeholder="">
+                        </div>
+                    </div>
+                </div>
 
-                    <button type="submit" class="btn btn-default">Submit</button>
-                </form>
-            </div>
+                <button type="submit" class="btn btn-default" id="submit">Submit</button>
+            </form>
         </div>
     </div>
+</div>
 
 
 
