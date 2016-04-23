@@ -1,7 +1,7 @@
 ''' provides an API for UI to access and display final result '''
 from flask import Flask, request, url_for, jsonify, render_template
 from flask_restful import Api, Resource, reqparse
-import os, requests, json, xmltodict, geocoder
+import os, requests, json, xmltodict, geocoder,geopy
 import pytz
 from dateutil import parser
 import datetime
@@ -29,11 +29,11 @@ def latlng(place): #convert text location to latitude and longitude
     longitude = location.lng
     return (latitude,longitude)
 
-#### get and post handler to send data to UI ####
+def get_timezone(place):
+    g = geopy.geocoders.GoogleV3()
+    return g.timezone(geocoder.google(place).latlng)
 
-@app.route('/ui', methods=['GET', 'POST'])  # replying to POST,GET
-def sendDataToUI():
-    return jsonify({'data': 'asdsa'})
+print get_timezone('sydney')
 
 source_key ='origin'
 destination_key = 'destination'
@@ -89,14 +89,12 @@ def getDetails():
 
 # create list of dictionaries
 ml = [{}]
-
-
-##### handlers for get and put from other endpoints####
+##### handlers for get and put from MI ####
 @app.route('/ml', methods=['GET', 'POST'])
 def sendDataToML():
     return jsonify({'data': ml})
 
-
+### to comvert time to specific timezone ###
 def parse_date_time_utc(date_str):
     dt = parser.parse(date_str)
     utc = dt.replace(tzinfo=pytz.utc) + dt.tzinfo._offset
