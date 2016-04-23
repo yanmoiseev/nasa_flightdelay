@@ -23,14 +23,11 @@
             	format: 'dddd, MMMM Do YYYY'
             });
             $('#datetimepicker2').datetimepicker({
-<<<<<<< HEAD
                 format: 'dddd, MMMM Do YYYY'
                 //useCurrent: false
             });
             $("#datetimepicker1").on("dp.change", function (e) {
                 $('#datetimepicker2').data("DateTimePicker").minDate(e.date);
-                alert(e.date);
-=======
             	format: 'dddd, MMMM Do YYYY'
         	});
         	$("#datetimepicker1").on("dp.change", function (e) {
@@ -41,13 +38,11 @@
         	});
 			$('#datetimepicker3').datetimepicker({
                 format: 'LT'
->>>>>>> f5d7bdabe6f300219514ee5b06a88f0bf518eda7
             });
 			$('#datetimepicker4').datetimepicker({
                 format: 'LT'
             });
         });
-<<<<<<< HEAD
 
 //        $("#form").submit(function(e) {
 //            alert('sda');
@@ -73,34 +68,16 @@
             data['flightno'] = $("#flightNo").val();
             data['origin'] = $("#origin").val();
             data['destination'] = $("#destination").val();
-            data['departuredate'] = $("#datetimepicker1").val();
-            data['arrivaldate'] = $("#datetimepicker2").val();
+            data['departuredate'] = $("#departureDate").val();
+            data['arrivaldate'] = $("#arrivalDate").val();
             data['departuretime'] = $("#departureTime").val();
             data['arrivaltime'] = $("#arrivalTime").val();
             data =JSON.stringify(data);
-
-            alert(data);
-
-
+            
 //            $("#form").submit();
         };
 
     </script>
-
-</head>
-<body>
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <form id="form">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="airline">Airline</label>
-                            <input type="text" class="form-control" id="airline" placeholder="">
-=======
-	</script>
 
 </head>
 <body>
@@ -114,7 +91,7 @@
                                 <label for="airline">Airline</label>
                                 <input type="text" class="form-control" id="airline" placeholder="">
                             </div>
->>>>>>> f5d7bdabe6f300219514ee5b06a88f0bf518eda7
+
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -141,9 +118,9 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="departureDate">Departure Date</label>
+                                <label for="datetimepicker1">Departure Date</label>
                 				<div class='input-group date' id='datetimepicker1'>
-                    				<input type='text' class="form-control" />
+                    				<input type='text' class="form-control" id="departureDate"/>
                     				<span class="input-group-addon">
                         				<span class="glyphicon glyphicon-calendar"></span>
                     				</span>
@@ -153,9 +130,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="departureDate">Arrival Date</label>
+                                <label for="datetimepicker2">Arrival Date</label>
                 				<div class='input-group date' id='datetimepicker2'>
-                    				<input type='text' class="form-control" />
+                    				<input type='text' class="form-control" id="arrivalDate"/>
                     				<span class="input-group-addon">
                         				<span class="glyphicon glyphicon-calendar"></span>
                     				</span>
@@ -167,9 +144,9 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="departureDate">Departure Time</label>
+                                <label for="datetimepicker3">Departure Time</label>
                 				<div class='input-group date' id='datetimepicker3'>
-                    				<input type='text' class="form-control" />
+                    				<input type='text' class="form-control" id="departureTime"/>
                     				<span class="input-group-addon">
                         				<span class="glyphicon glyphicon-time"></span>
                     				</span>
@@ -179,9 +156,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="departureDate">Arrival Time</label>
+                                <label for="datetimepicker4">Arrival Time</label>
                 				<div class='input-group date' id='datetimepicker4'>
-                    				<input type='text' class="form-control" />
+                    				<input type='text' class="form-control" id="arrivalTime"/>
                     				<span class="input-group-addon">
                         				<span class="glyphicon glyphicon-time"></span>
                     				</span>
@@ -190,14 +167,9 @@
                         </div>
                     </div>
 
-<<<<<<< HEAD
                 <input type="submit" class="btn btn-default" id="submit" onclick="submitHandler()"></input>
             </form>
-=======
-                    <button type="submit" class="btn btn-default" id="submit">Submit</button>
-                </form>
             </div>
->>>>>>> f5d7bdabe6f300219514ee5b06a88f0bf518eda7
         </div>
     </div>
 
