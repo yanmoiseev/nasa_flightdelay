@@ -4,18 +4,46 @@
     <meta charset="UTF-8">
     <title>National Delay Map</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" />
-
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
 	<script src="https://d3js.org/d3.v3.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
 	<script src="datamaps.usa.min.js"></script>
 </head>
+
 <body>
-	<div style="position: relative; width: 100%; height: 500px;" id="map"> 
-				<script src="datamaps-eg-usa.js"></script>
-	</div>
+<div id="container" style="height: 100vh"></div>
+<input type="text" id="lat" />
+<input type="text" id="lon" />
+<button type="button" onclick="buttonHandler()">butt</button>
+<script>
+    var map = new Datamap({
+        element: document.getElementById('container'),
+        scope: 'usa'
+    });
+
+    function buttHandler() {
+        var element = document.getElementById('container');
+        console.log(element);
+    }
+
+    function buttonHandler() {
+        map.arc([
+            {
+                origin: {
+                    latitude: 40.639722,
+                    longitude: -73.778889
+                },
+                destination: {
+                    latitude: 37.618889,
+                    longitude: -122.375
+                }
+            }
+        ],  {strokeWidth: 1, arcSharpness: 1.4});
+    }
+
+</script>
+
 </body>
 </html>

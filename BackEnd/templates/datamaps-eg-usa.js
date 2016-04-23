@@ -3,15 +3,16 @@ var arcs = new Datamap({
   scope: 'usa',
   fills: {
     defaultFill: "#EEEEEE",
-    win: '#0fa0fa'
+    selected: '#0fa0fa'
   },
+    // to fill in the state with color
   data: {
-    'TX': { fillKey: 'win' },
-    'FL': { fillKey: 'win' },
-    'NC': { fillKey: 'win' },
-    'CA': { fillKey: 'win' },
-    'NY': { fillKey: 'win' },
-    'CO': { fillKey: 'win' }
+    // 'TX': { fillKey: 'selected' },
+    // 'FL': { fillKey: 'selected' },
+    // 'NC': { fillKey: 'selected' },
+    // 'CA': { fillKey: 'selected' },
+    // 'NY': { fillKey: 'selected' },
+    // 'CO': { fillKey: 'selected' }
   }
 });
 
