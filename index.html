@@ -84,19 +84,20 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-                <form id="form">
+            
+                <form id="form" action="/find" method="post">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="airline">Airline</label>
-                                <input type="text" class="form-control" id="airline" placeholder="">
+                                <input type="text" name="airline" class="form-control" id="airline" placeholder="">
                             </div>
 
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="flightNo">Flight No.</label>
-                                <input type="text" class="form-control" id="flightNo" placeholder="">
+                                <input type="text" name="flightno" class="form-control" id="flightNo" placeholder="">
                             </div>
                         </div>
                     </div>
@@ -104,13 +105,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="origin">Origin</label>
-                                <input type="text" class="form-control" id="origin" placeholder="">
+                                <input type="text" name="origin" class="form-control" id="origin" placeholder="">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="destination">Destination</label>
-                                <input type="text" class="form-control" id="destination" placeholder="">
+                                <input type="text" name="destination" class="form-control" id="destination" placeholder="">
                             </div>
                         </div>
                     </div>
@@ -120,7 +121,7 @@
                             <div class="form-group">
                                 <label for="datetimepicker1">Departure Date</label>
                 				<div class='input-group date' id='datetimepicker1'>
-                    				<input type='text' class="form-control" id="departureDate"/>
+                    				<input type='text' name="departuredate" class="form-control" id="departureDate"/>
                     				<span class="input-group-addon">
                         				<span class="glyphicon glyphicon-calendar"></span>
                     				</span>
@@ -132,7 +133,7 @@
                             <div class="form-group">
                                 <label for="datetimepicker2">Arrival Date</label>
                 				<div class='input-group date' id='datetimepicker2'>
-                    				<input type='text' class="form-control" id="arrivalDate"/>
+                    				<input type='text' name="arrivaldate" class="form-control" id="arrivalDate"/>
                     				<span class="input-group-addon">
                         				<span class="glyphicon glyphicon-calendar"></span>
                     				</span>
@@ -146,7 +147,7 @@
                             <div class="form-group">
                                 <label for="datetimepicker3">Departure Time</label>
                 				<div class='input-group date' id='datetimepicker3'>
-                    				<input type='text' class="form-control" id="departureTime"/>
+                    				<input type='text' name="departuretime" class="form-control" id="departureTime"/>
                     				<span class="input-group-addon">
                         				<span class="glyphicon glyphicon-time"></span>
                     				</span>
@@ -158,7 +159,7 @@
                             <div class="form-group">
                                 <label for="datetimepicker4">Arrival Time</label>
                 				<div class='input-group date' id='datetimepicker4'>
-                    				<input type='text' class="form-control" id="arrivalTime"/>
+                    				<input type='text' name="arrivaltime" class="form-control" id="arrivalTime"/>
                     				<span class="input-group-addon">
                         				<span class="glyphicon glyphicon-time"></span>
                     				</span>
