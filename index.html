@@ -29,6 +29,7 @@
             });
             $("#datetimepicker1").on("dp.change", function (e) {
                 $('#datetimepicker2').data("DateTimePicker").minDate(e.date);
+                alert(e.date);
             });
             $("#datetimepicker2").on("dp.change", function (e) {
                 $('#datetimepicker1').data("DateTimePicker").maxDate(e.date);
@@ -36,13 +37,47 @@
 
         });
 
-        $("#form").on('click', '#submit', function () {
-                alert('hey!');
+//        $("#form").submit(function(e) {
+//            alert('sda');
+//            var url = "/"; // the script where you handle the form input.
+//            $.ajax({
+//                type: "POST",
+//                url: url,
+//                data: $("#form").serialize(), // serializes the form's elements.
+//                success: function(data)
+//                {
+//                    alert(data); // show response from the php script.
+//                }
+//            });
+//
+//            e.preventDefault(); // avoid to execute the actual submit of the form.
+//            e.unbind();
+//        });
+
+        function submitHandler(e) {
+//            e.preventDefault();
+            var data = {};
+            data['airline'] = $("#airline").val();
+            data['flightno'] = $("#flightNo").val();
+            data['origin'] = $("#origin").val();
+            data['destination'] = $("#destination").val();
+            data['departuredate'] = $("#datetimepicker1").val();
+            data['arrivaldate'] = $("#datetimepicker2").val();
+            data['departuretime'] = $("#departureTime").val();
+            data['arrivaltime'] = $("#arrivalTime").val();
+            data =JSON.stringify(data);
+
+            alert(data);
+
+
+//            $("#form").submit();
         };
+
     </script>
 
 </head>
 <body>
+
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -117,7 +152,7 @@
                     </div>
                 </div>
 
-                <input type="submit" class="btn btn-default" id="submit">Submit</input>
+                <input type="submit" class="btn btn-default" id="submit" onclick="submitHandler()"></input>
             </form>
         </div>
     </div>
