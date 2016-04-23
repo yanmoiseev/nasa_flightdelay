@@ -3,12 +3,14 @@ from flask_restful import Api
 import requests, xmltodict, geocoder, pytz, geopy
 from dateutil import parser
 import datetime
+from tzwhere import tzwhere
 from collections import OrderedDict
 
 app = Flask(__name__)
 api = Api(app)
 
-#region utility
+
+# region utility
 def latlng(place):  # convert text location to latitude and longitude
     location = geocoder.google(place)  # location
     latitude = location.lat
@@ -20,15 +22,19 @@ def parse_date_time_utc(date_str):
     dt = parser.parse(date_str)
 
     if dt.tzinfo:
-        # convert to utc
         dt = dt.replace(tzinfo=pytz.utc) + dt.tzinfo._offset
 
     return dt
 
+
 def get_timezone(place):
-   g = geopy.geocoders.GoogleV3()
-   return g.timezone(geocoder.google(place).latlng)
-#endregion
+    t = tzwhere.tzwhere()
+    coordinate = latlng(place)
+    timezone_name = t.tzNameAt(coordinate[0], coordinate[1])
+    d = datetime.datetime.now(pytz.timezone(timezone_name)).strftime('%z')
+    return 'GMT{}'.format(d)
+
+# endregion
 
 source_key = 'origin'
 destination_key = 'destination'
@@ -39,22 +45,23 @@ arvdate_key = 'arrivaldate'
 depttime_key = 'departuretime'
 arvtime_key = 'arrivaltime'
 
+
 @app.route('/', methods=['GET'])
 def index():
-	return render_template('index.html')
+    return render_template('index.html')
 
 
 @app.route('/find', methods=['GET', 'POST'])  # to accquire source and destination info
 def find():
     if request.method == 'POST':
-        source = request.form.get(source_key,None)
-        destination = request.form.get(destination_key,None)
-        flightno = request.form.get(flightno_key,None)
-        airline = request.form.get(airline_key,None)
-        departdate = request.form.get(deptdate_key,None)
-        arrivaldate = request.form.get(arvdate_key,None)
-        departtime = request.form.get(depttime_key,None)
-        arrivetime = request.form.get(arvtime_key,None)
+        source = request.form.get(source_key, None)
+        destination = request.form.get(destination_key, None)
+        flightno = request.form.get(flightno_key, None)
+        airline = request.form.get(airline_key, None)
+        departdate = request.form.get(deptdate_key, None)
+        arrivaldate = request.form.get(arvdate_key, None)
+        departtime = request.form.get(depttime_key, None)
+        arrivetime = request.form.get(arvtime_key, None)
     else:
         return redirect(url_for('index'))
 
@@ -86,7 +93,6 @@ def find():
 def sendDataToML():
     ml = [{}]
     return jsonify({'data': ml})
-
 
 
 # this one is forming url to get weather data from http://graphical.weather.gov/xml/SOAP_server/ndfdXMLclient.php?
