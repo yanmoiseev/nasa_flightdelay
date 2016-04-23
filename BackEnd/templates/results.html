@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flight Delay Tracker</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" />
+    <link rel="stylesheet" type="text/css" href="flapper.css" />
+
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+	<script src="jquery.transform-0.9.3.min.js"></script>
+	<script src="jshashtable.js"></script>
+	<script src="jquery.flapper.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#display').flapper({
+				width: 5,
+				chars_preset: 'num'
+			}).val('11:45').change();
+		});
+	</script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+        	<div class="col-md-8 col-md-offset-2">
+        		<input class="header dark M" id="display" />
+			</div>
+		</div>
+	</div>
+</body>
+</html>
