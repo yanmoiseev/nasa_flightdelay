@@ -1,5 +1,5 @@
 ''' provides an API for UI to access and display final result '''
-from flask import Flask,request,url_for,jsonify
+from flask import Flask,request,url_for,jsonify, flash
 from flask_restful import Api,Resource,reqparse
 import os,requests,json,xmltodict
 from collections import OrderedDict
@@ -21,19 +21,33 @@ l = [{'result':readData()}]
 
 #### get and post handler to send data to UI ####
 
-@app.route('/ToUI',methods=['GET','POST']) # replying to POST,GET
+@app.route('/ToUI',methods=['GET','POST']) # POSt, GET handlers to send Data 
 def sendDataToUI():
     return jsonify({'data':l})
 
-@app.route('/Find',methods=['GET','POST']) # to accquire source and destination info
+source_key ='source'
+destination_key = 'destination'
+flightno_key = 'flightno'
+time_key = 'time'
+
+### to fetch source and destination info from ui.
+
+@app.route('/Find',methods=['GET','POST']) 
 def getDetails():
     if request.method == 'POST':
-        source = request.form['source']
-        destination = request.form['destination']
-        flightno = request.form['flightno']
-        time = request.form['time']
-
-    return (source,destination)
+        source = request.form[source_key]
+        destination = request.form[destination_key]
+        flightno = request.form[flightno_key]
+        time = request.form[time_key]
+    else:
+        print request.args
+        source = request.args.get(source_key)
+        destination = request.args.get(destination_key)
+        flightno = request.args.get(flightno_key)
+        time = request.args.get(time_key)
+    
+    l=[{'source':source,'destination':destination,'flightno':flightno,'time':time}]
+    return jsonify({"response":l})
 
 ####################################
 ##### make other data available ####
@@ -62,7 +76,7 @@ def xgetData():
 	#re = requests.get("http://graphical.weather.gov/xml/SOAP_server/ndfdXMLclient.php?whichClient=NDFDgen&lat=38.99&lon=-77.01&listLatLon=&lat1=&lon1=&lat2=&lon2=&resolutionSub=&listLat1=&listLon1=&listLat2=&listLon2=&resolutionList=&endPoint1Lat=&endPoint1Lon=&endPoint2Lat=&endPoint2Lon=&listEndPoint1Lat=&listEndPoint1Lon=&listEndPoint2Lat=&listEndPoint2Lon=&zipCodeList=&listZipCodeList=&centerPointLat=&centerPointLon=&distanceLat=&distanceLon=&resolutionSquare=&listCenterPointLat=&listCenterPointLon=&listDistanceLat=&listDistanceLon=&listResolutionSquare=&citiesLevel=&listCitiesLevel=&sector=&gmlListLatLon=&featureType=&requestedTime=&startTime=&endTime=&compType=&propertyName=&product=time-series&begin=2004-01-01T00%3A00%3A00&end=2020-04-23T00%3A00%3A00&Unit=e&maxt=maxt&Submit=Submit")
 	re = requests.get("http://graphical.weather.gov/xml/SOAP_server/ndfdXMLclient.php?whichClient=NDFDgen&lat=38.99&lon=-77.01&listLatLon=&lat1=&lon1=&lat2=&lon2=&resolutionSub=&listLat1=&listLon1=&listLat2=&listLon2=&resolutionList=&endPoint1Lat=&endPoint1Lon=&endPoint2Lat=&endPoint2Lon=&listEndPoint1Lat=&listEndPoint1Lon=&listEndPoint2Lat=&listEndPoint2Lon=&zipCodeList=&listZipCodeList=&centerPointLat=&centerPointLon=&distanceLat=&distanceLon=&resolutionSquare=&listCenterPointLat=&listCenterPointLon=&listDistanceLat=&listDistanceLon=&listResolutionSquare=&citiesLevel=&listCitiesLevel=&sector=&gmlListLatLon=&featureType=&requestedTime=&startTime=&endTime=&compType=&propertyName=&product=time-series&begin=2016-04-25T00%3A00%3A00&end=2016-04-25T00%3A10%3A00&Unit=m&temp=temp&dew=dew&wspd=wspd&wdir=wdir&sky=sky&wx=wx&rh=rh&appt=appt&precipa_r=precipa_r&Submit=Submit")
 	xdata = xmltodict.parse(re.content)
-	print xdata
+	#print xdata
 	xdatad= {}
 	xdatad['location'] = (xdata['dwml']['data']['location']['point']['@latitude'],xdata['dwml']['data']['location']['point']['@longitude'])
 	#xdatad['moreWeatherInformation'] = xdata['dwml']['data']['moreWeatherInformation']
@@ -74,6 +88,8 @@ def xgetData():
 	xdatad['wind-speed'] = xdata['dwml']['data']['parameters']['wind-speed']['value']	
 	xdatad['cloud-amount'] = xdata['dwml']['data']['parameters']['cloud-amount']['value']
 	xdatad['humidity'] = xdata['dwml']['data']['parameters']['humidity']['value']
+	
+	
 
 	#for para in parameterst:
 	#	xdatad[para['name']] = parameterst[para]['value']
