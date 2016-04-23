@@ -31,7 +31,12 @@
         	$("#datetimepicker2").on("dp.change", function (e) {
             	$('#datetimepicker1').data("DateTimePicker").maxDate(e.date);
         	});
-
+			$('#datetimepicker3').datetimepicker({
+                format: 'LT'
+            });
+			$('#datetimepicker4').datetimepicker({
+                format: 'LT'
+            });
         });
 	</script>
 
@@ -99,14 +104,25 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="departureTime">Departure Time</label>
-                                <input type="text" class="form-control" id="departureTime" placeholder="">
+                                <label for="departureDate">Departure Time</label>
+                				<div class='input-group date' id='datetimepicker3'>
+                    				<input type='text' class="form-control" />
+                    				<span class="input-group-addon">
+                        				<span class="glyphicon glyphicon-time"></span>
+                    				</span>
+                				</div>
                             </div>
+
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="arrivalTime">Arrival Time</label>
-                                <input type="text" class="form-control" id="arrivalTime" placeholder="">
+                                <label for="departureDate">Arrival Time</label>
+                				<div class='input-group date' id='datetimepicker4'>
+                    				<input type='text' class="form-control" />
+                    				<span class="input-group-addon">
+                        				<span class="glyphicon glyphicon-time"></span>
+                    				</span>
+                				</div>
                             </div>
                         </div>
                     </div>
