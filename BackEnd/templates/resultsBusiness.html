@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flight Delay Tracker</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" />
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-datetimepicker.min.css" />
+
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script src="/static/js/moment.js"></script>
+    <script src="/static/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        function goBack() {
+            // (insert url here)
+            window.location.href = '...';
+        };
+    </script>
+
+    <style>
+        .jumboedit {
+            background-color: transparent;
+            text-align: center;
+            margin:0;
+        }
+        .jumboedit h1 {
+            font-size: 4em;
+        }
+        body {
+            background-image: url("photo3.jpeg");
+            background-size: cover;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+        }
+        table {
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <!-- Container for base div width -->
+        <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+            <!-- Jumbotron container -->
+            <div class="jumbotron jumboedit">
+                <h1>WeVision</h1>
+                <h3>for Business</h3>
+            </div>
+
+            <!-- The table part-->
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Flight No.</th>
+                    <th>Origin</th>
+                    <th>Destination</th>
+                    <th>Delay</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Thursday, 21 April 2016</td>
+                    <td>Flight 426</td>
+                    <td>DTF</td>
+                    <td>DAY</td>
+                    <td>30 min</td>
+                </tr>
+                <tr>
+                    <td>Thursday, 21 April 2016</td>
+                    <td>Flight 243</td>
+                    <td>PLN</td>
+                    <td>DVL</td>
+                    <td>10 min</td>
+                </tr>
+                <tr>
+                    <td>Friday, 22 April 2016</td>
+                    <td>Flight 248</td>
+                    <td>ABR</td>
+                    <td>KFC</td>
+                    <td>55 min</td>
+                </tr>
+                <tr>
+                    <td>Saturday, 23 April 2016</td>
+                    <td>Flight 423</td>
+                    <td>STT</td>
+                    <td>GJT</td>
+                    <td>45 min</td>
+                </tr>
+                <tr>
+                    <td>Sunday,24 April 2016</td>
+                    <td>Flight 426</td>
+                    <td>TLH</td>
+                    <td>FAR</td>
+                    <td>35 min</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <button type="button" class="btn btn-primary" style="display: block; width: 100%; margin-top: 2em;" onclick="goBack()">Go Back</button>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+</body>
+</html>
