@@ -10,71 +10,88 @@
     <link rel="stylesheet" type="text/css" href="../static/css/flapper.css" />
 
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
-	<script src="../static/js/jquery.transform-0.9.3.min.js"></script>
-	<script src="../static/js/jshashtable.js"></script>
-	<script src="../static/js/jquery.flapper.js"></script>
-	<script src="../static/js/moment.js"></script>
+	<script src="../static/css/jquery.transform-0.9.3.min.js"></script>
+	<script src="../static/css/jshashtable.js"></script>
+	<script src="../static/css/jquery.flapper.js"></script>
+	<script src="../static/css/moment.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() { // do this when page loads
-
+		
 		// define options for date/time flappers
-
+		
 		var dateOptions = {
 			width: 6,
 			chars_preset: 'alphanum'
 		}
-
+		
 		var timeOptions = {
 			width: 6,
 			chars_preset: 'num'
 		}
-
+		
 		// declare variables to hold data from back end
 		// {{delay_times}} = [min, avg, max];
 		// {{dep_datetime}} = 'yyyy-mm-dd hh:mm:ss';
-
-		var delay_times = {{delay_times}};
-    var dep_datetime = '{{dep_datetime | string}}';
-
+		// {{flight}} = flight number;
+		// {{origin}} = 3-letter origin airport code;
+		// {{dest}} = 3-letter destination airport code;
+		
+		var {{delay_times}}, {{dep_datetime}}, {{flight}}, {{origin}}, {{dest}};
+		
 		// processes {{dep_datetime}} using {{delay_times}}
 		// formats date/time and passes to flappers as string
 		// change() starts the animation
-
+		
 		for(var i = 0; i < 3; i++) {
-			var flapperDatetime = moment(dep_datetime).add( delay_times[i], 'm');
+			var flapperDatetime = moment({{dep_datetime}}).add({{delay_times}}[i], 'm');
 			var depDate = flapperDatetime.format("MMM DD").toUpperCase();
 			var depTime = flapperDatetime.format("HH:mm");
 			$('#datedisplay' + i).flapper(dateOptions).val(depDate).change();
 			$('#timedisplay' + i).flapper(dateOptions).val(depTime).change();
 		}
+		
+		$('#flight').html({{flight}});
+		$('#origin').html({{origin}});
+		$('#dest').html({{dest}});
+		$('#date').html(moment({{dep_datetime}}).format("MMM DD, YYYY"));
 
 		});
 	</script>
 </head>
 <body>
     <div class="container">
-        <div class="row">
-        	<!-- Masthead and disclaimer -->
-
+        <div class="row" id="results-header">
         	<center>
         	<h2>Estimated Times of Departure</h2>
-
         	<p>DISCLAIMER: All estimates are approximate only.</p>
         	</center>
-
-        	<!-- Renders flappers -->
-
+        </div>
+        <div style="height: 20px;"></div>
+        <div class="row" id="results-flight-details">	
+        	<div class="col-md-3 col-md-offset-2">
+        		<p><b>Flight Number</b>: <span class="value" id="flight"></span></b></p>        	
+        	</div>
+        	<div class="col-md-3">
+        		<p><b>Route</b>: <b><span class="value" id="origin"></span></b> to <b><span class="value" id="destination"></span></b></p>
+        	</div>
+        	<div class="col-md-3">
+        		<p><b>Date</b>: <span class="value" id="date"></span></p>
+        	</div>
+        </div>
+        <div class="row" id="results-body">
         	<div class="col-md-3 col-md-offset-2">
         		<input class="header light XS" id="datedisplay0" />
         		<input class="header light XS" id="timedisplay0" />
         		<p><b>Best Case</b></p>
 			</div>
         	<div class="col-md-3">
+         		
          		<input class="header light XS" id="datedisplay1" />
         		<input class="header light XS" id="timedisplay1" />
         		<p><b>Realistic</b></p>
 			</div>
         	<div class="col-md-3">
+        		
         		<input class="header light XS" id="datedisplay2" />
         		<input class="header light XS" id="timedisplay2" />
         		<p><b>Worst Case</b></p>
