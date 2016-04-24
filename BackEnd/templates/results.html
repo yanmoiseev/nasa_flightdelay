@@ -13,20 +13,70 @@
 	<script src="../static/js/jquery.transform-0.9.3.min.js"></script>
 	<script src="../static/js/jshashtable.js"></script>
 	<script src="../static/js/jquery.flapper.js"></script>
+	<script src="../static/js/moment.js"></script>
 	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#display').flapper({
-				width: 5,
-				chars_preset: 'num'
-			}).val('11:45').change();
+		$(document).ready(function() { // do this when page loads
+		
+		// define options for date/time flappers
+		
+		var dateOptions = {
+			width: 6,
+			chars_preset: 'alphanum'
+		}
+		
+		var timeOptions = {
+			width: 6,
+			chars_preset: 'num'
+		}
+		
+		// declare variables to hold data from back end
+		// {{delay_times}} = [min, avg, max];
+		// {{dep_datetime}} = 'yyyy-mm-dd hh:mm:ss';
+		
+		var {{delay_times}}, {{dep_datetime}};
+		
+		// processes {{dep_datetime}} using {{delay_times}}
+		// formats date/time and passes to flappers as string
+		// change() starts the animation
+		
+		for(var i = 0; i < 3; i++) {
+			var flapperDatetime = moment({{dep_datetime}}).add({{delay_times}}[i], 'm');
+			var depDate = flapperDatetime.format("MMM DD").toUpperCase();
+			var depTime = flapperDatetime.format("HH:mm");
+			$('#datedisplay' + i).flapper(dateOptions).val(depDate).change();
+			$('#timedisplay' + i).flapper(dateOptions).val(depTime).change();
+		}
+		
 		});
 	</script>
 </head>
 <body>
     <div class="container">
         <div class="row">
-        	<div class="col-md-8 col-md-offset-2">
-        		<input class="header dark M" id="display" />
+        	// Masthead and disclaimer
+        
+        	<center>
+        	<h2>Estimated Times of Departure</h2>
+        	
+        	<p>DISCLAIMER: All estimates are approximate only.</p>
+        	</center>
+        	
+        	// Renders flappers
+        	
+        	<div class="col-md-3 col-md-offset-2">
+        		<input class="header light XS" id="datedisplay0" />
+        		<input class="header light XS" id="timedisplay0" />
+        		<p><b>Best Case</b></p>
+			</div>
+        	<div class="col-md-3">
+         		<input class="header light XS" id="datedisplay1" />
+        		<input class="header light XS" id="timedisplay1" />
+        		<p><b>Realistic</b></p>
+			</div>
+        	<div class="col-md-3">
+        		<input class="header light XS" id="datedisplay2" />
+        		<input class="header light XS" id="timedisplay2" />
+        		<p><b>Worst Case</b></p>
 			</div>
 		</div>
 	</div>
