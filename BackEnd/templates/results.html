@@ -16,53 +16,54 @@
 	<script src="../static/js/moment.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() { // do this when page loads
-		
+
 		// define options for date/time flappers
-		
+
 		var dateOptions = {
 			width: 6,
 			chars_preset: 'alphanum'
 		}
-		
+
 		var timeOptions = {
 			width: 6,
 			chars_preset: 'num'
 		}
-		
+
 		// declare variables to hold data from back end
 		// {{delay_times}} = [min, avg, max];
 		// {{dep_datetime}} = 'yyyy-mm-dd hh:mm:ss';
-		
-		var {{delay_times}}, {{dep_datetime}};
-		
+
+		var delay_times = {{delay_times}};
+    var dep_datetime = '{{dep_datetime | string}}';
+
 		// processes {{dep_datetime}} using {{delay_times}}
 		// formats date/time and passes to flappers as string
 		// change() starts the animation
-		
+
 		for(var i = 0; i < 3; i++) {
-			var flapperDatetime = moment({{dep_datetime}}).add({{delay_times}}[i], 'm');
+			var flapperDatetime = moment(dep_datetime).add( delay_times[i], 'm');
 			var depDate = flapperDatetime.format("MMM DD").toUpperCase();
 			var depTime = flapperDatetime.format("HH:mm");
 			$('#datedisplay' + i).flapper(dateOptions).val(depDate).change();
 			$('#timedisplay' + i).flapper(dateOptions).val(depTime).change();
 		}
-		
+
 		});
 	</script>
 </head>
 <body>
     <div class="container">
         <div class="row">
-        	// Masthead and disclaimer
-        
+        	<!-- Masthead and disclaimer -->
+
         	<center>
         	<h2>Estimated Times of Departure</h2>
-        	
+
         	<p>DISCLAIMER: All estimates are approximate only.</p>
         	</center>
-        	
-        	// Renders flappers
-        	
+
+        	<!-- Renders flappers -->
+
         	<div class="col-md-3 col-md-offset-2">
         		<input class="header light XS" id="datedisplay0" />
         		<input class="header light XS" id="timedisplay0" />

@@ -56,7 +56,6 @@ def index():
 
 
 @app.route('/find', methods=['GET', 'POST'])  # to accquire source and destination info
-@app.route('/find/<probability>')  # to display final delay probability
 def find():
     if request.method == 'POST':
         source = request.form.get(source_key, None)
@@ -91,11 +90,10 @@ def find():
                                             dt)
     # probability = rreg.predict([])
     probability = calculate(departure_result)
-    return render_template('prediction.html', probability=probability)
-
-    # arrival_result = get_forecast_weather(dest_coordinate[0], dest_coordinate[1], arrival_begin, arrival_end)
-    # return jsonify(departure_result)
-
+    print str(dt.strftime('%Y-%m-%d %H:%M:%S'))
+    return render_template('results.html',
+                           delay_times=[50, 190, 800],
+                           dep_datetime=str(dt.strftime('%Y-%m-%d %H:%M:%S')))
 
 ####################################
 ##### make other data available ####
