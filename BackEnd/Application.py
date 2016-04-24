@@ -3,7 +3,7 @@ from flask_restful import Api
 import requests, xmltodict, geocoder, pytz, geopy, pickle
 from MI import calculate
 from dateutil import parser
-import datetime,pickle
+import datetime, pickle
 from collections import OrderedDict
 
 # pickle_file = open("lingreg.p",'rb')
@@ -12,6 +12,7 @@ from collections import OrderedDict
 app = Flask(__name__)
 app.secret_key = 'adssadsd'
 api = Api(app)
+
 
 # app.secret_key = 'something'
 
@@ -37,7 +38,10 @@ def get_timezone(place):
     g = geopy.geocoders.GoogleV3()
     return g.timezone(geocoder.google(place).latlng)
 
+
 from math import radians, cos, sin, asin, sqrt
+
+
 def haversine(lon1, lat1, lon2, lat2):
     """
     Calculate the great circle distance between two points
@@ -48,7 +52,7 @@ def haversine(lon1, lat1, lon2, lat2):
     # haversine formula
     dlon = lon2 - lon1
     dlat = lat2 - lat1
-    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
     c = 2 * asin(sqrt(a))
     km = 6367 * c
     return km
@@ -69,6 +73,7 @@ arvtime_key = 'arrivaltime'
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
+
 
 @app.route('/find', methods=['GET', 'POST'])  # to accquire source and destination info
 def find():
@@ -107,7 +112,7 @@ def find():
 
     departure_result = get_forecast_weather(source_coordinate[0], source_coordinate[1], departure_begin, departure_end,
                                             dt, a_dt, dist)
-    
+
     # probability = rreg.predict([])
 
     probability = calculate(departure_result)
@@ -116,12 +121,17 @@ def find():
     print str(dt.strftime('%Y-%m-%d %H:%M:%S'))
     return render_template('results.html',
                            delay_times=[50, 60, 70],
-                           dep_datetime=str(dt.strftime('%Y-%m-%d %H:%M:%S')))
+                           dep_datetime=str(dt.strftime('%Y-%m-%d %H:%M:%S')),
+                           flight=flightno,
+                           origin=source,
+                           dest=destination
+                           )
 
 
 @app.route('/business')
 def redirect_business():
     return render_template('business.html')
+
 
 ####################################
 ##### make other data available ####
@@ -165,7 +175,8 @@ def parse_xml_to_flat_dict(request, datetime, lat, lon, a_dt, dist):
     response_dict = xmltodict.parse(request.content)
 
     parsed_result = {}
-    parsed_list = ['location_lat', 'location_long', 'temperature', 'dew_point', 'wind_speed', 'wind_direction', 'cloud_cover_amount',
+    parsed_list = ['location_lat', 'location_long', 'temperature', 'dew_point', 'wind_speed', 'wind_direction',
+                   'cloud_cover_amount',
                    'snow_amount', 'humidity']
 
     for para in parsed_list:

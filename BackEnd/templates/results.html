@@ -31,11 +31,7 @@
 
         // declare variables to hold data from back end {{delay_times}} = [min, avg, max]; {{dep_datetime}} = 'yyyy-mm-dd hh:mm:ss';
 
-        var delay_times = {
-          {
-            delay_times
-          }
-        };
+        var delay_times = {{ delay_times }};
         var dep_datetime = '{{dep_datetime | string}}';
 
         // processes {{dep_datetime}} using {{delay_times}} formats date/time and passes to flappers as string change() starts the animation
@@ -48,19 +44,10 @@
           $('#timedisplay' + i).flapper(dateOptions).val(depTime).change();
         }
 
-        $('#flight').html({{
-            flight
-          }});
-        $('#origin').html({{
-            origin
-          }});
-        $('#dest').html({{
-            dest
-          }});
-        $('#date').html(moment({{
-            dep_datetime
-          }}).format("MMM DD, YYYY"));
-
+        $('#flight').html('{{ flight }}');
+        $('#origin').html('{{ origin }}');
+        $('#destination').html('{{ dest }}');
+        $('#date').html(moment(dep_datetime).format("MMM DD, YYYY"));
       });
     </script>
   </head>
@@ -87,7 +74,6 @@
           <p>
             <b>Flight Number</b>:
             <span class="value" id="flight"></span>
-          </b>
         </p>
       </div>
       <div class="col-md-3">

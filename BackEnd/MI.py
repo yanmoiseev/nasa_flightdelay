@@ -1,8 +1,8 @@
 ### place holder for MI input and output####
 import pickle
 
-# pickle_file = open("lingreg.p",'rb')
-# rreg = pickle.load(pickle_file)
+pickle_file = open("lingreg.p",'rb')
+rreg = pickle.load(pickle_file)
 
 
 def calculate(d):  # d is the input dictionary
@@ -25,8 +25,8 @@ def calculate(d):  # d is the input dictionary
     ml_list.append(round(int(d['temperature']) / 5 * 9 + 32) * 10)
     ml_list.append(int(d['wind_speed']) * 2.23694)
     ml_list.append(int(d['wind_direction']))
-    return ml_list
-    # return rreg.predict(ml_list)
+    # return ml_list
+    return rreg.predict(ml_list)
 
 def convert_cloud(cover_amount):
     # broken, clear, few, overcast, scattered
