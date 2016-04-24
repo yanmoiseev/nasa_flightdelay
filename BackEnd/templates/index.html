@@ -9,9 +9,13 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" />
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-datetimepicker.min.css" />
     <style>
-        .unPadding {
-            padding: 0;
+        .jumboedit {
+            background-color: transparent;
+            text-align: center;
             margin:0;
+        }
+        .jumboedit h1 {
+            font-size: 4em;
         }
     </style>
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
@@ -44,47 +48,16 @@
             });
         });
 
-//        $("#form").submit(function(e) {
-//            alert('sda');
-//            var url = "/"; // the script where you handle the form input.
-//            $.ajax({
-//                type: "POST",
-//                url: url,
-//                data: $("#form").serialize(), // serializes the form's elements.
-//                success: function(data)
-//                {
-//                    alert(data); // show response from the php script.
-//                }
-//            });
-//
-//            e.preventDefault(); // avoid to execute the actual submit of the form.
-//            e.unbind();
-//        });
-
-        function submitHandler(e) {
-//            e.preventDefault();
-            var data = {};
-            data['airline'] = $("#airline").val();
-            data['flightno'] = $("#flightNo").val();
-            data['origin'] = $("#origin").val();
-            data['destination'] = $("#destination").val();
-            data['departuredate'] = $("#departureDate").val();
-            data['arrivaldate'] = $("#arrivalDate").val();
-            data['departuretime'] = $("#departureTime").val();
-            data['arrivaltime'] = $("#arrivalTime").val();
-            data =JSON.stringify(data);
-
-//            $("#form").submit();
-        };
-
     </script>
 
 </head>
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-            
+            <div class=" col-sm-6 col-md-6">
+                <div class="jumbotron jumboedit">
+                    <h1>Time Till Trip</h1>
+                </div>
                 <form id="form" action="/find" method="post">
                     <div class="row">
                         <div class="col-md-6">
@@ -168,8 +141,12 @@
                         </div>
                     </div>
 
-                <input type="submit" class="btn btn-default" id="submit" onclick="submitHandler()">
-            </form>
+                    <input type="submit" class="btn btn-default" id="submit" />
+                </form>
+            </div>
+
+            <div class="col-md-6">
+
             </div>
         </div>
     </div>
