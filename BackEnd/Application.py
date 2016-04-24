@@ -10,6 +10,7 @@ from collections import OrderedDict
 # rreg = pickle.load(pickle_file)
 
 app = Flask(__name__)
+app.secret_key = 'adssadsd'
 api = Api(app)
 
 # app.secret_key = 'something'
@@ -35,6 +36,22 @@ def parse_date_time_utc(date_str):
 def get_timezone(place):
     g = geopy.geocoders.GoogleV3()
     return g.timezone(geocoder.google(place).latlng)
+
+from math import radians, cos, sin, asin, sqrt
+def haversine(lon1, lat1, lon2, lat2):
+    """
+    Calculate the great circle distance between two points
+    on the earth (specified in decimal degrees)
+    """
+    # convert decimal degrees to radians
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+    # haversine formula
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a))
+    km = 6367 * c
+    return km
 
 
 # end region
@@ -69,6 +86,9 @@ def find():
 
     source_coordinate = latlng(source)
     dest_coordinate = latlng(destination)
+    dist = haversine(source_coordinate[1], source_coordinate[0],
+                     dest_coordinate[1], dest_coordinate[0])
+
     departure_full_time = '{} {}'.format(departdate, departtime)
     arrive_full_time = '{} {}'.format(arrivaldate, arrivetime)
 
@@ -81,18 +101,21 @@ def find():
 
     arrival_begin = parse_date_time_utc(arrive_full_time)
     arrival_end = arrival_begin + datetime.timedelta(seconds=1)
+    a_dt = arrival_begin
     arrival_begin = arrival_begin.isoformat().split('+')[0]
     arrival_end = arrival_end.isoformat().split('+')[0]
 
     departure_result = get_forecast_weather(source_coordinate[0], source_coordinate[1], departure_begin, departure_end,
-                                            dt)
+                                            dt, a_dt, dist)
     
     # probability = rreg.predict([])
+
     probability = calculate(departure_result)
-    flash(departure_result) # incase MI doesnot happen fully
+    flash(departure_result)
+    flash(probability)
     print str(dt.strftime('%Y-%m-%d %H:%M:%S'))
     return render_template('results.html',
-                           delay_times=[50, 190, 800],
+                           delay_times=[50, 60, 70],
                            dep_datetime=str(dt.strftime('%Y-%m-%d %H:%M:%S')))
 
 
@@ -106,7 +129,8 @@ def redirect_business():
 
 # this one is forming url to get weather data from http://graphical.weather.gov/xml/SOAP_server/ndfdXMLclient.php?
 def get_forecast_weather(lat=None, lon=None,
-                         begin=None, end=None, datetime=None):
+                         begin=None, end=None, datetime=None, arrival_dt=None,
+                         dist=None):
     base_url = 'http://graphical.weather.gov/xml/SOAP_server/ndfdXMLclient.php'
     params = {}
 
@@ -133,10 +157,11 @@ def get_forecast_weather(lat=None, lon=None,
     params['wwa'] = 'wwa'
     params['maxrh'] = 'maxrh'
     params['Submit'] = 'Submit'
-    return parse_xml_to_flat_dict(requests.get(base_url, params=params), datetime, lat, lon)
+    return parse_xml_to_flat_dict(requests.get(base_url, params=params), datetime,
+                                  lat, lon, arrival_dt, dist)
 
 
-def parse_xml_to_flat_dict(request, datetime, lat, lon):
+def parse_xml_to_flat_dict(request, datetime, lat, lon, a_dt, dist):
     response_dict = xmltodict.parse(request.content)
 
     parsed_result = {}
@@ -147,6 +172,11 @@ def parse_xml_to_flat_dict(request, datetime, lat, lon):
         parsed_result.setdefault(para, 0)
 
     parsed_result['day'] = datetime.weekday()
+    parsed_result['day_of_month'] = datetime.day
+    parsed_result['dep_time'] = datetime.strftime('%H%M')
+    parsed_result['arr_time'] = a_dt.strftime('%H%M')
+    parsed_result['elapsed_time'] = 60
+    parsed_result['distance'] = dist
     parsed_result['location_lat'] = lat
     parsed_result['location_long'] = lon
 
