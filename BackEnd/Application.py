@@ -116,8 +116,8 @@ def find():
     # probability = rreg.predict([])
 
     probability = calculate(departure_result)
-    flash(departure_result)
-    flash(probability)
+    #flash(departure_result)
+    #flash(probability)
     prob = probability[0][0]
     low = max(0, prob - 15)
     high = prob + 15
