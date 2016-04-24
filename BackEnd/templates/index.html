@@ -4,23 +4,16 @@
     <meta charset="UTF-8">
     <title>Flight Delay Tracker</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" />
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-datetimepicker.min.css" />
-    <style>
-        .jumboedit {
-            background-color: transparent;
-            text-align: center;
-            margin:0;
-        }
-        .jumboedit h1 {
-            font-size: 4em;
-        }
-    </style>
+
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <script src="/static/js/moment.js"></script>
     <script src="/static/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
     <script type="text/javascript">
     	$(function () {
         	$('#datetimepicker1').datetimepicker({
@@ -50,11 +43,21 @@
 
     </script>
 
+    <style>
+        .jumboedit {
+            background-color: transparent;
+            text-align: center;
+            margin:0;
+        }
+        .jumboedit h1 {
+            font-size: 4em;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <div class="row">
-            <div class=" col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-3">
+        <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
                 <div class="jumbotron jumboedit">
                     <h1>Time Till Trip</h1>
                 </div>
@@ -62,18 +65,18 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="airline">Airline</label>
-                                <input type="text" name="airline" class="form-control" id="airline" placeholder="">
-                            </div>
-
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
                                 <label for="flightNo">Flight No.</label>
                                 <input type="text" name="flightno" class="form-control" id="flightNo" placeholder="">
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="airline">Airline</label>
+                                <input type="text" name="airline" class="form-control" id="airline" placeholder="">
+                            </div>
+                        </div>
                     </div>
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -141,13 +144,11 @@
                         </div>
                     </div>
 
-                    <input type="submit" class="btn btn-default" id="submit" />
+                        <input style="display: block; width: 100%; margin-top: 2em;" type="submit" class="btn btn-default" id="submit" />
+
                 </form>
             </div>
 
-            <div class="col-md-6">
-
-            </div>
         </div>
     </div>
 
