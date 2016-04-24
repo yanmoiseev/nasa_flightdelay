@@ -55,6 +55,13 @@
           var depTime = flapperDatetime.format("HH:mm");
           $('#datedisplay' + i).flapper(dateOptions).val(depDate).change();
           $('#timedisplay' + i).flapper(dateOptions).val(depTime).change();
+          if (delay_times[i] > 60) {
+				    $('#light' + i).css("background-color","#ff0000");
+		      } else if (delay_times[i] > 30) {
+				    $('#light' + i).css("background-color","#ffff00");
+		      } else {
+				    $('#light' + i).css("background-color","#00ff00");
+		      }
         }
 
         $('#flight').html('{{ flight }}');
@@ -110,6 +117,7 @@
     </div>
 
     <div class="col-md-3 col-md-offset-2">
+      <input id="light0" style="width: 166px;" />
       <input class="header light XS" id="datedisplay0"/>
       <input class="header light XS" id="timedisplay0"/>
       <p>
@@ -117,6 +125,7 @@
       </p>
     </div>
     <div class="col-md-3">
+      <input id="light1" style="width: 166px;" />
       <input class="header light XS" id="datedisplay1"/>
       <input class="header light XS" id="timedisplay1"/>
       <p>
@@ -124,6 +133,7 @@
       </p>
     </div>
     <div class="col-md-3">
+      <input id="light2" style="width: 166px;" />
       <input class="header light XS" id="datedisplay2"/>
       <input class="header light XS" id="timedisplay2"/>
       <p>
