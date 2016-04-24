@@ -10,7 +10,7 @@ def calculate(d):  # d is the input dictionary
     # elapse, distance, cloud clear, dew point, temp ,
     # wind speed, win dir
 
-    ml_list = []
+    ml_list = [2]
 
     ml_list.append(int(d['day_of_month']))
     ml_list.append(int(d['day']) + 1)
@@ -18,13 +18,13 @@ def calculate(d):  # d is the input dictionary
     ml_list.append(int(d['arr_time']))
     ml_list.append(int(d['elapsed_time']))
     ml_list.append(int(d['distance']))
-    ml_list.append(int(d['cloud_cover_amount']))
+    # ml_list.append(int(d['cloud_cover_amount']))
 
     # ml_list.extend(convert_cloud(d['cloud_cover_amount']))
-    ml_list.append(round(int(d['dew_point']) / 5 * 9 + 32) * 10)
-    ml_list.append(round(int(d['temperature']) / 5 * 9 + 32) * 10)
-    ml_list.append(int(d['wind_speed']) * 2.23694)
-    ml_list.append(int(d['wind_direction']))
+    # ml_list.append(round(int(d['dew_point']) / 5 * 9 + 32) * 10)
+    # ml_list.append(round(int(d['temperature']) / 5 * 9 + 32) * 10)
+    # ml_list.append(int(d['wind_speed']) * 2.23694)
+    # ml_list.append(int(d['wind_direction']))
     # return ml_list
     return rreg.predict(ml_list)
 

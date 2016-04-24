@@ -118,9 +118,12 @@ def find():
     probability = calculate(departure_result)
     flash(departure_result)
     flash(probability)
+    prob = probability[0][0]
+    low = max(0, prob - 15)
+    high = prob + 15
     print str(dt.strftime('%Y-%m-%d %H:%M:%S'))
     return render_template('results.html',
-                           delay_times=[50, 60, 70],
+                           delay_times=[low, prob, high],
                            dep_datetime=str(dt.strftime('%Y-%m-%d %H:%M:%S')),
                            flight=flightno,
                            origin=source,
@@ -130,7 +133,7 @@ def find():
 
 @app.route('/business')
 def redirect_business():
-    return render_template('business.html')
+    return render_template('resultsBusiness.html')
 
 
 ####################################
