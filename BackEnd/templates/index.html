@@ -48,6 +48,7 @@
             background-color: transparent;
             text-align: center;
             margin:0;
+            padding-bottom: 2em;
         }
         .jumboedit h1 {
             font-size: 4em;
@@ -58,17 +59,20 @@
             -webkit-background-size: cover;
             -moz-background-size: cover;
             -o-background-size: cover;"
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" style="padding-bottom: 5em">
         <div class="row">
             <!-- Container for base div width -->
             <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
                 <!-- Jumbotron container -->
                 <div class="jumbotron jumboedit">
-                    <h1>We - Vision</h1>
+                    <h1>WeVision</h1>
                 </div>
 
                 <!-- Nav container div without any responsiveness whatsoever, contents defined in Tabs container div -->
@@ -165,7 +169,7 @@
                                 </div>
                             </div>
 
-                            <input style="display: block; width: 100%; margin-top: 2em;" type="submit" class="btn btn-default" id="submit" />
+                            <input style="display: block; width: 100%; margin-top: 2em;" type="submit" class="btn btn-primary" id="submit" />
                         </form>
                     </div>
 
@@ -176,7 +180,7 @@
                                 <label class="control-label">Upload your CSV file here</label>
                                 <input id="inputFile" type="file" class="file"/>
                             </div>
-                            <input style="display: block; width: 100%; margin-top: 2em;" type="submit" class="btn btn-default" id="submitBusiness">
+                            <input style="display: block; width: 100%; margin-top: 2em;" type="submit" class="btn btn-primary" id="submitBusiness">
                         </form>
                     </div>
 
