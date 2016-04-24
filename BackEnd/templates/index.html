@@ -57,96 +57,115 @@
 <body>
     <div class="container">
         <div class="row">
-        <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+            <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
                 <div class="jumbotron jumboedit">
                     <h1>Time Till Trip</h1>
                 </div>
-                <form id="form" action="/find" method="post">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="flightNo">Flight No.</label>
-                                <input type="text" name="flightno" class="form-control" id="flightNo" placeholder="">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="airline">Airline</label>
-                                <input type="text" name="airline" class="form-control" id="airline" placeholder="">
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="origin">Origin</label>
-                                <input type="text" name="origin" class="form-control" id="origin" placeholder="">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="destination">Destination</label>
-                                <input type="text" name="destination" class="form-control" id="destination" placeholder="">
-                            </div>
-                        </div>
-                    </div>
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#personalTab">Personal</a></li>
+                    <li><a data-toggle="tab" href="#businessTab">Business</a></li>
+                </ul>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="datetimepicker1">Departure Date</label>
-                				<div class='input-group date' id='datetimepicker1'>
-                    				<input type='text' name="departuredate" class="form-control" id="departureDate"/>
+
+                <div class="tab-content">
+
+                    <div id="personalTab" class="tab-pane fade in active">
+                        <form id="form" action="/find" method="post">
+                            <div class="row" style="margin-top: 2em;">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="flightNo">Flight No.</label>
+                                        <input type="text" name="flightno" class="form-control" id="flightNo" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="airline">Airline</label>
+                                        <input type="text" name="airline" class="form-control" id="airline" placeholder="">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="origin">Origin</label>
+                                        <input type="text" name="origin" class="form-control" id="origin" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="destination">Destination</label>
+                                        <input type="text" name="destination" class="form-control" id="destination" placeholder="">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="datetimepicker1">Departure Date</label>
+                                        <div class='input-group date' id='datetimepicker1'>
+                                            <input type='text' name="departuredate" class="form-control" id="departureDate"/>
                     				<span class="input-group-addon">
                         				<span class="glyphicon glyphicon-calendar"></span>
                     				</span>
-                				</div>
-                            </div>
+                                        </div>
+                                    </div>
 
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="datetimepicker2">Arrival Date</label>
-                				<div class='input-group date' id='datetimepicker2'>
-                    				<input type='text' name="arrivaldate" class="form-control" id="arrivalDate"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="datetimepicker2">Arrival Date</label>
+                                        <div class='input-group date' id='datetimepicker2'>
+                                            <input type='text' name="arrivaldate" class="form-control" id="arrivalDate"/>
                     				<span class="input-group-addon">
                         				<span class="glyphicon glyphicon-calendar"></span>
                     				</span>
-                				</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="datetimepicker3">Departure Time</label>
-                				<div class='input-group date' id='datetimepicker3'>
-                    				<input type='text' name="departuretime" class="form-control" id="departureTime"/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="datetimepicker3">Departure Time</label>
+                                        <div class='input-group date' id='datetimepicker3'>
+                                            <input type='text' name="departuretime" class="form-control" id="departureTime"/>
                     				<span class="input-group-addon">
                         				<span class="glyphicon glyphicon-time"></span>
                     				</span>
-                				</div>
-                            </div>
+                                        </div>
+                                    </div>
 
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="datetimepicker4">Arrival Time</label>
-                				<div class='input-group date' id='datetimepicker4'>
-                    				<input type='text' name="arrivaltime" class="form-control" id="arrivalTime"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="datetimepicker4">Arrival Time</label>
+                                        <div class='input-group date' id='datetimepicker4'>
+                                            <input type='text' name="arrivaltime" class="form-control" id="arrivalTime"/>
                     				<span class="input-group-addon">
                         				<span class="glyphicon glyphicon-time"></span>
                     				</span>
-                				</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+
+                            <input style="display: block; width: 100%; margin-top: 2em;" type="submit" class="btn btn-default" id="submit" />
+                        </form>
                     </div>
 
-                        <input style="display: block; width: 100%; margin-top: 2em;" type="submit" class="btn btn-default" id="submit" />
+                    <div id="businessTab" class="tab-pane fade">
+                        <h3>Business Tab</h3>
+                        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
 
-                </form>
+                </div>
+
+
             </div>
 
         </div>
