@@ -57,19 +57,23 @@
 <body>
     <div class="container">
         <div class="row">
+            <!-- Container for base div width --> 
             <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+                <!-- Jumbotron container -->
                 <div class="jumbotron jumboedit">
                     <h1>Time Till Trip</h1>
                 </div>
 
+                <!-- Nav container div without any responsiveness whatsoever, contents defined in Tabs container div -->
                 <ul class="nav nav-tabs">
                     <li class="active"><a data-toggle="tab" href="#personalTab">Personal</a></li>
                     <li><a data-toggle="tab" href="#businessTab">Business</a></li>
                 </ul>
 
-
+                <!--Tabs container div-->
                 <div class="tab-content">
 
+                    <!-- Put contents of Personal tab inside this div below-->
                     <div id="personalTab" class="tab-pane fade in active">
                         <form id="form" action="/find" method="post">
                             <div class="row" style="margin-top: 2em;">
@@ -158,6 +162,7 @@
                         </form>
                     </div>
 
+                    <!-- Put contents of Business tab inside div below-->
                     <div id="businessTab" class="tab-pane fade">
                         <h3>Business Tab</h3>
                         <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
