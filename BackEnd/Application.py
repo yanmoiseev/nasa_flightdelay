@@ -1,24 +1,27 @@
-from flask import Flask, request, url_for, jsonify, render_template, redirect,flash
+from flask import Flask, request, url_for, jsonify, render_template, redirect, flash
 from flask_restful import Api
-import requests, xmltodict, geocoder, pytz, geopy,pickle
+import requests, xmltodict, geocoder, pytz, geopy, pickle
 from MI import calculate
 from dateutil import parser
 import datetime
 from collections import OrderedDict
 
-#pickle_file = open("lingreg.p",'rb')
-#rreg = pickle.load(pickle_file)
+# pickle_file = open("lingreg.p",'rb')
+# rreg = pickle.load(pickle_file)
 
 app = Flask(__name__)
 api = Api(app)
-#app.secret_key = 'something'
 
-#region utility
+
+# app.secret_key = 'something'
+
+# region utility
 def latlng(place):  # convert text location to latitude and longitude
     location = geocoder.google(place)  # location
     latitude = location.lat
     longitude = location.lng
     return (latitude, longitude)
+
 
 def parse_date_time_utc(date_str):
     dt = parser.parse(date_str)
@@ -29,11 +32,13 @@ def parse_date_time_utc(date_str):
 
     return dt
 
-def get_timezone(place):
-   g = geopy.geocoders.GoogleV3()
-   return g.timezone(geocoder.google(place).latlng)
 
-#end region
+def get_timezone(place):
+    g = geopy.geocoders.GoogleV3()
+    return g.timezone(geocoder.google(place).latlng)
+
+
+# end region
 
 source_key = 'origin'
 destination_key = 'destination'
@@ -44,23 +49,24 @@ arvdate_key = 'arrivaldate'
 depttime_key = 'departuretime'
 arvtime_key = 'arrivaltime'
 
+
 @app.route('/', methods=['GET'])
 def index():
-	return render_template('index.html')
+    return render_template('index.html')
 
 
 @app.route('/find', methods=['GET', 'POST'])  # to accquire source and destination info
-@app.route('/find/<probability>') # to display final delay probability
+@app.route('/find/<probability>')  # to display final delay probability
 def find():
     if request.method == 'POST':
-        source = request.form.get(source_key,None)
-        destination = request.form.get(destination_key,None)
-        flightno = request.form.get(flightno_key,None)
-        airline = request.form.get(airline_key,None)
-        departdate = request.form.get(deptdate_key,None)
-        arrivaldate = request.form.get(arvdate_key,None)
-        departtime = request.form.get(depttime_key,None)
-        arrivetime = request.form.get(arvtime_key,None)
+        source = request.form.get(source_key, None)
+        destination = request.form.get(destination_key, None)
+        flightno = request.form.get(flightno_key, None)
+        airline = request.form.get(airline_key, None)
+        departdate = request.form.get(deptdate_key, None)
+        arrivaldate = request.form.get(arvdate_key, None)
+        departtime = request.form.get(depttime_key, None)
+        arrivetime = request.form.get(arvtime_key, None)
     else:
         return redirect(url_for('index'))
 
@@ -71,6 +77,8 @@ def find():
 
     departure_begin = parse_date_time_utc(departure_full_time)
     departure_end = departure_begin + datetime.timedelta(seconds=1)
+    dt = departure_begin
+    print 'source: {} coord: {}'.format(source, source_coordinate)
     departure_begin = departure_begin.isoformat().split('+')[0]
     departure_end = departure_end.isoformat().split('+')[0]
 
@@ -79,13 +87,14 @@ def find():
     arrival_begin = arrival_begin.isoformat().split('+')[0]
     arrival_end = arrival_end.isoformat().split('+')[0]
 
-    departure_result = get_forecast_weather(source_coordinate[0], source_coordinate[1], departure_begin, departure_end)
-    #probability = rreg.predict([])
+    departure_result = get_forecast_weather(source_coordinate[0], source_coordinate[1], departure_begin, departure_end,
+                                            dt)
+    # probability = rreg.predict([])
     probability = calculate(departure_result)
-    return render_template('prediction.html',probability=probability)
+    return render_template('prediction.html', probability=probability)
 
-    #arrival_result = get_forecast_weather(dest_coordinate[0], dest_coordinate[1], arrival_begin, arrival_end)
-    #return jsonify(departure_result)
+    # arrival_result = get_forecast_weather(dest_coordinate[0], dest_coordinate[1], arrival_begin, arrival_end)
+    # return jsonify(departure_result)
 
 
 ####################################
@@ -94,7 +103,7 @@ def find():
 
 # this one is forming url to get weather data from http://graphical.weather.gov/xml/SOAP_server/ndfdXMLclient.php?
 def get_forecast_weather(lat=None, lon=None,
-                         begin=None, end=None):
+                         begin=None, end=None, datetime=None):
     base_url = 'http://graphical.weather.gov/xml/SOAP_server/ndfdXMLclient.php'
     params = {}
 
@@ -112,65 +121,76 @@ def get_forecast_weather(lat=None, lon=None,
     params['wdir'] = 'wdir'
     params['sky'] = 'sky'
     params['wx'] = 'wx'
-    params['ptornado'] = 'ptornado'
-    params['phail'] = 'phail'
-    params['pxtornado'] = 'pxtornado'
-    params['pxhail'] = 'pxhail'
-    params['ptotsvrtstm'] = 'ptotsvrtstm'
-    params['pxtotsvrtstm'] = 'pxtotsvrtstm'
+    # params['ptornado'] = 'ptornado'
+    # params['phail'] = 'phail'
+    # params['pxtornado'] = 'pxtornado'
+    # params['pxhail'] = 'pxhail'
+    # params['ptotsvrtstm'] = 'ptotsvrtstm'
+    # params['pxtotsvrtstm'] = 'pxtotsvrtstm'
     params['wwa'] = 'wwa'
-    params['wgust'] = 'wgust'
     params['maxrh'] = 'maxrh'
     params['Submit'] = 'Submit'
-    return parse_xml_to_flat_dict(requests.get(base_url,params=params))
+    return parse_xml_to_flat_dict(requests.get(base_url, params=params), datetime, lat, lon)
 
-def parse_xml_to_flat_dict(request):
-    #print request.url
+
+def parse_xml_to_flat_dict(request, datetime, lat, lon):
     response_dict = xmltodict.parse(request.content)
-    #print request.content
+
+    parsed_result = {}
+    parsed_list = ['location_lat', 'location_long', 'temperature', 'dew_point', 'wind_speed', 'wind_direction', 'cloud_cover_amount',
+                   'snow_amount', 'humidity']
+
+    for para in parsed_list:
+        parsed_result.setdefault(para, 0)
+
+    parsed_result['day'] = datetime.weekday()
+    parsed_result['location_lat'] = lat
+    parsed_result['location_long'] = lon
+
     try:
         response_data = response_dict['dwml']['data']
         response_params = response_data['parameters']
     except KeyError:
-        response_data={}
+        print 'Exception {}'.format(parsed_result)
+        return parsed_result
 
-    parsed_result = {}
-    parsed_list = ['location','temperature','dew_point','wind_speed','wind_direction','cloud_cover_amount','snow_amount','probability_severe_thunderstorm','probability_extreme_severe_thunderstrom','wind_gust','humidity']
-    for para in parsed_list:
-        parsed_result.setdefault(para,0)
+    def check_if_value_exists(dict):
+        return 'value' in dict
+
     try:
-    	lat = response_data['location']['point']['@latitude']
-    	long = response_data['location']['point']['@longitude']
-    	temperature = response_params['temperature'][0]['value']
-    	dew_point = response_params['temperature'][1]['value']
-    	wind_speed = response_params['wind-speed'][0]['value']
-    	wind_direction = response_params['direction']['value']
-    	cloud_cover_amount = response_params['cloud-amount']['value']
-    	snow_amount = response_params['precipitation']['value']
+        if 'temperature' in response_params:
+            t = response_params['temperature']
+            if t[0] and check_if_value_exists(t[0]):
+                parsed_result['temperature'] = response_params['temperature'][0]['value']
+            if t[1] and check_if_value_exists(t[1]):
+                parsed_result['dew_point'] = response_params['temperature'][1]['value']
+    except:
+        pass
 
-    	probability_severe_thunderstorm = response_params['convective-hazard'][0]['severe-component']['value']
-    	probability_extreme_severe_thunderstorm = response_params['convective-hazard'][1]['severe-component']['value']
+    if 'wind-speed' in response_params and check_if_value_exists(response_params['wind-speed']):
+        parsed_result['wind_speed'] = response_params['wind-speed']['value']
 
-    	wind_gust = response_params['wind-speed'][1]['value']
-    	humidity = response_params['humidity']['value']
-   
-        parsed_result['location_lat'] = lat
-        parsed_result['location_long'] = long
-        parsed_result['temperature'] = temperature
-        parsed_result['dew_point'] = dew_point
+    if 'direction' in response_params and check_if_value_exists(response_params['direction']):
+        parsed_result['wind_direction'] = response_params['direction']['value']
 
-        parsed_result['wind_speed'] = wind_speed
-        parsed_result['wind_direction'] = wind_direction
-        parsed_result['cloud_cover_amount'] = cloud_cover_amount
-        parsed_result['snow_amount'] = snow_amount
-        parsed_result['probability_severe_thunderstorm'] = probability_severe_thunderstorm
-        parsed_result['probability_extreme_severe_thunderstorm'] = probability_extreme_severe_thunderstorm
-        parsed_result['wind_gust'] = wind_gust
-        parsed_result['humidity'] = humidity
-    except KeyError:
-	print parsed_result
-        pass # the default values set will be passed
+    if 'cloud-amount' in response_params and check_if_value_exists(response_params['cloud-amount']):
+        parsed_result['cloud_cover_amount'] = response_params['cloud-amount']['value']
 
+    if 'precipitation' in response_params and check_if_value_exists(response_params['precipitation']):
+        parsed_result['snow_amount'] = response_params['precipitation']['value']
+
+    # if 'convective-hazard' in response_params:
+    #     ch = response_params['convective-hazard']
+    #     if ch[0] and ch[0]['severe-component'] and check_if_value_exists(ch[0]['severe-component']):
+    #         parsed_result['probability_severe_thunderstorm'] = response_params['convective-hazard'][0]['severe-component']['value']
+    #     if ch[1] and ch[1]['severe-component'] and check_if_value_exists(ch[1]['severe-component']):
+    #         parsed_result['probability_extreme_severe_thunderstorm'] = response_params['convective-hazard'][1]['severe-component'][
+    #             'value']
+
+    if 'humidity' in response_params and check_if_value_exists(response_params['humidity']):
+        parsed_result['humidity'] = response_params['humidity']['value']
+
+    print parsed_result
     return parsed_result
 
 
